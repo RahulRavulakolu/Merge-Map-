@@ -303,9 +303,9 @@ with st.sidebar:
 
     model = st.selectbox(
         "Gemma model",
-        options=['gemma-4-31b-it', 'gemma-4-26b-a4b-it'],
+        options=['gemma-4-26b-a4b-it', 'gemma-4-31b-it'],
         index=0,
-        help="gemma-4-31b-it is the default capable model. gemma-4-26b-a4b-it is the faster fallback.",
+        help="gemma-4-26b-a4b-it is fast and reliable. gemma-4-31b-it is also available.",
     )
 
     token = st.text_input(
