@@ -137,11 +137,11 @@ def _call_gemma_with_tools(
     )
 
     try:
-        response = client.models.generate_content(
+        chat = client.chats.create(
             model=model,
-            contents=user_prompt,
             config=config,
         )
+        response = chat.send_message(user_prompt)
     except Exception as e:
         raise GemmaError(f"API call to {model} failed: {e}")
 
