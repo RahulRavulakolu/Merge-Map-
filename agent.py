@@ -626,6 +626,11 @@ def get_details(
                 last_error = e_retry
         except Exception as e_tools:
             last_error = e_tools
+            if "429" in str(e_tools) or "RESOURCE_EXHAUSTED" in str(e_tools):
+                _progress("⏳ Free-tier quota pause: waiting 10s for window reset…")
+                import time
+                time.sleep(10)
+
             # Section 10 Fallback: pre-read files from candidate where and call no-tools
             _progress("Falling back to direct file inclusion…")
             try:

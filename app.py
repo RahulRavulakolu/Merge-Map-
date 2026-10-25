@@ -730,7 +730,11 @@ def main():
                     )
                     st.session_state.details[cid] = detail
                 except GemmaError as e:
-                    st.error(f"❌ Gemma error: {e}")
+                    err_text = str(e)
+                    if "429" in err_text or "RESOURCE_EXHAUSTED" in err_text:
+                        st.warning("⏳ **Google Free Tier Rate Limit (16K tokens/min):** You've reached the temporary rolling per-minute limit. Please wait 10 seconds and click **Retry** below.", icon="⏳")
+                    else:
+                        st.error(f"❌ Gemma error: {err_text}")
                     col1, col2 = st.columns([1, 3])
                     with col1:
                         if st.button("🔄 Retry"):

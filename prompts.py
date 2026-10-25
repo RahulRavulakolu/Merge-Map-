@@ -112,13 +112,19 @@ def build_stage2_prompt(ctx: dict, candidate: dict) -> str:
     """
     import json
     candidate_json = json.dumps(candidate, indent=2)
-    issues_text = _format_issues(ctx.get('issues', []))
-    tree_text = '\n'.join(ctx.get('tree', []))
+    # For stage 2, only include the relevant issue if it's existing
+    issue_num = candidate.get('issue_number')
+    if candidate.get('source') == 'existing' and issue_num:
+        matching = [iss for iss in ctx.get('issues', []) if iss.get('number') == issue_num]
+        issues_text = _format_issues(matching) if matching else "(Issue details from candidate)"
+    else:
+        issues_text = "(None - this is a newly discovered task)"
 
-    readme = ctx.get('readme', '')[:15000]
-    contributing = ctx.get('contributing', '')[:10000]
-    if len(tree_text) > 60000:
-        tree_text = tree_text[:60000] + '\n... (truncated)'
+    tree_paths = ctx.get('tree', [])
+    tree_text = '\n'.join(tree_paths[:250])
+
+    readme = ctx.get('readme', '')[:8000]
+    contributing = ctx.get('contributing', '')[:4000]
 
     prompt = f"""=== CANDIDATE ===
 {candidate_json}
